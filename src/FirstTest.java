@@ -205,6 +205,41 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void CheckFoundContent() {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia'",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Java",
+                "Cannot find search element",
+                5
+        );
+
+        List<WebElement> searchTitles = waitForAllElementsPresented(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "Cannot find any search element",
+                5
+        );
+
+        long numberOfArticlesFound = searchTitles.stream().peek(
+                (e) -> {
+                    String title = e.getAttribute("text");
+                    System.out.println(title);
+                    Assert.assertTrue(
+                            "Article's title doesn't contain Java",
+                            title.contains("Java")
+                    );
+                }
+        ).count();
+
+        System.out.println(numberOfArticlesFound);
+    }
+
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
