@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
 
 public class FirstTest {
 
@@ -159,6 +160,51 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void CheckSearchAndDiscard() {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia'",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Java",
+                "Cannot find search element",
+                5
+        );
+
+        List<WebElement> searchTitles = waitForAllElementsPresented(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "Cannot find any search element",
+                5
+        );
+
+        long numberOfArticlesFound = searchTitles.stream().peek(
+                (e) -> System.out.println(e.getAttribute("text"))
+        ).count();
+
+        System.out.println(numberOfArticlesFound);
+
+        Assert.assertTrue(
+                "Cannot find few articles for the search",
+                searchTitles.size()>2 // 3 is already "few"
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "Cannot find 'X'",
+                5
+        );
+
+        waitForElementNotPresent(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "Some search titles are still visible",
+                5
+        );
+    }
+
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
@@ -194,6 +240,14 @@ public class FirstTest {
         wait.withMessage(error_message + "\n");
         return  wait.until(
                 ExpectedConditions.invisibilityOfElementLocated(by)
+        );
+    }
+
+    private List<WebElement> waitForAllElementsPresented(By by, String error_message, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(error_message + "\n");
+        return wait.until(
+                ExpectedConditions.presenceOfAllElementsLocatedBy(by)
         );
     }
 }
