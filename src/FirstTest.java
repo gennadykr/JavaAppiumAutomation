@@ -234,8 +234,10 @@ public class FirstTest {
                     String title = e.getAttribute("text");
                     System.out.println(title);
                     Assert.assertTrue(
-                            "Article's title doesn't contain Java",
-                            title.contains("Java")
+                            "Article's title doesn't contain Java (case-insensitive)",
+                            //title.contains("Java")
+                            //title.matches("(.*)[jJ]ava(.*)")
+                            title.toLowerCase().contains("java")
                     );
                 }
         ).count();
