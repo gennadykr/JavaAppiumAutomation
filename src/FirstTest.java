@@ -1,10 +1,8 @@
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.runners.MethodSorters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.ScreenOrientation;
@@ -16,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.net.URL;
 import java.util.List;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class FirstTest {
 
     private AppiumDriver driver;
@@ -33,11 +32,11 @@ public class FirstTest {
         capabilities.setCapability("app","C:\\Users\\tester\\IdeaProjects\\JavaAppiumAutomation\\apks\\org.wikipedia.apk");
 
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
-
     }
 
     @After
     public void tearDown(){
+        driver.rotate(ScreenOrientation.PORTRAIT);
         driver.quit();
     }
 
@@ -787,13 +786,13 @@ public class FirstTest {
                 15
         );
 
-        /*
-        waitForElementPresent(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "Cannot find article title",
-                15
-        );
-        */
+
+        //waitForElementPresent(
+        //        By.id("org.wikipedia:id/view_page_title_text"),
+        //        "Cannot find article title",
+        //        15
+        //);
+
 
         assertElementPresent(
                 By.id("org.wikipedia:id/view_page_title_text"),
@@ -801,6 +800,7 @@ public class FirstTest {
         );
 
     }
+
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
