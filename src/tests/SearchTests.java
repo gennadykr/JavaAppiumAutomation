@@ -1,4 +1,4 @@
-package lib.tests;
+package tests;
 
 import lib.CoreTestCase;
 import lib.ui.SearchPageObject;
