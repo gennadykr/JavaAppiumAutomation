@@ -29,7 +29,7 @@ public class SearchTests extends CoreTestCase {
 
         SearchPageObject.clearSearchLine();
         SearchPageObject.clickCancelSearch();
-        SearchPageObject.waitForCancelButtonToDissapear();
+        SearchPageObject.waitForCancelButtonToDisappear();
     }
 
     @Test

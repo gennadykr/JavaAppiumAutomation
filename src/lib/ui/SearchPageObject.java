@@ -3,6 +3,8 @@ package lib.ui;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 
+import java.util.List;
+
 public class SearchPageObject extends MainPageObject {
 
     private static final String
@@ -16,7 +18,8 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_RESULT_ELEMENT =
                     "//*[@resource-id='org.wikipedia:id/search_results_list']" +
                     "/*[@resource-id='org.wikipedia:id/page_list_item_container']",
-            SEARCH_EMPTY_RESULTS_ELEMENT = "//*[@text='No results found']";
+            SEARCH_EMPTY_RESULTS_ELEMENT = "//*[@text='No results found']",
+            SEARCH_ARTICLE_TITLE = "org.wikipedia:id/page_list_item_title";
 
 
     public SearchPageObject(AppiumDriver driver) {
@@ -61,7 +64,7 @@ public class SearchPageObject extends MainPageObject {
         );
     }
 
-    public void waitForCancelButtonToDissapear(){
+    public void waitForCancelButtonToDisappear(){
         this.waitForElementNotPresent(
                 By.id(SEARCH_CANCEL_BUTTON),
                 "'X' didn't disappear",
@@ -98,6 +101,15 @@ public class SearchPageObject extends MainPageObject {
         );
 
         return this.getAmountOfElements(By.xpath(SEARCH_RESULT_ELEMENT));
+    }
+
+    public List<String> getTitlesOfFoundArticles(){
+        return waitForElementsAndGetAttribute(
+                By.id(SEARCH_ARTICLE_TITLE),
+                "text",
+                "Cannot find articles titles",
+                15
+        );
     }
 
     public void waitForEmptyResultLabel(){

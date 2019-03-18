@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MainPageObject {
 
@@ -148,5 +149,10 @@ public class MainPageObject {
     public String waitForElementAndGetAttribute(By by, String attribute, String error_message, long timeoutInSeconds){
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         return element.getAttribute(attribute);
+    }
+
+    public List<String> waitForElementsAndGetAttribute(By by, String attribute, String error_message, long timeoutInSeconds){
+        List<WebElement> elements = waitForAllElementsPresented(by, error_message, timeoutInSeconds);
+        return elements.stream().map((e) -> e.getAttribute(attribute)).collect(Collectors.toList());
     }
 }

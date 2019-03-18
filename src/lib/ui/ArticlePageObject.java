@@ -14,18 +14,31 @@ public class ArticlePageObject extends MainPageObject {
         ADD_TO_MY_LIST_OVERLAY = "org.wikipedia:id/onboarding_button",
         MY_LIST_NAME_INPUT = "org.wikipedia:id/text_input",
         MY_LIST_OK_BUTTON = "//*[@text='OK']",
-        CLOSE_ARTICLE_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']";
+        CLOSE_ARTICLE_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']",
+        LIST_NAME_SELECTR_TPL = "//*[@resource-id='org.wikipedia:id/design_bottom_sheet']//*[@text='{LIST_NAME}']";
+
+    /*TEMPLATE METHODS*/
+    private static String getListSelectorElement(String substring) {
+        return LIST_NAME_SELECTR_TPL.replace("{LIST_NAME}", substring);
+    }
+    /*TEMPLATE METHODS*/
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
     }
 
     public WebElement waitForTitleElement() {
-
         return this.waitForElementPresent(
             By.id(TITLE),
                 "Cannot find title",
                 30
+        );
+    }
+
+    public void assertTitlePresent() {
+        this.assertElementPresent(
+                By.id(TITLE),
+                "Cannot find article title"
         );
     }
 
@@ -76,6 +89,27 @@ public class ArticlePageObject extends MainPageObject {
         this.waitForElementAndClick(
                 By.xpath(MY_LIST_OK_BUTTON),
                 "Cannot press OK button",
+                5
+        );
+    }
+
+    public void addArticleToMyAlreadyCreatedList(String name_of_folder){
+
+        this.waitForElementAndClick(
+                By.xpath(OPTIONS_BUTTON),
+                "Cannot find button to open article options",
+                5
+        );
+
+        this.waitForElementAndClick(
+                By.xpath(OPTIONS_ADD_TO_MY_LIST_BUTTON),
+                "Cannot find option to add article to reading list",
+                5
+        );
+
+        this.waitForElementAndClick(
+                By.xpath(getListSelectorElement(name_of_folder)),
+                "Cannot find folder " + name_of_folder,
                 5
         );
     }

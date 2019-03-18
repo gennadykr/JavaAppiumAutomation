@@ -6,8 +6,8 @@ import org.openqa.selenium.By;
 public class MyListsPageObject extends MainPageObject {
 
     private final static String
-            FOLDER_BY_NAME_TPL = "//*[@text='{FOLDER_NAME}']",
-            ARTICLE_BY_TITLE_TPL = "//*[@text='{ARTICLE_TITLE}']";
+            FOLDER_BY_NAME_TPL = "//*[@resource-id='org.wikipedia:id/reading_list_list']//*[@resource-id='org.wikipedia:id/item_title' and @text='{FOLDER_NAME}']",
+            ARTICLE_BY_TITLE_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_title' and @text='{ARTICLE_TITLE}']";
 
     /*TEMPLATE METHODS*/
     private static String getFolderXpathByName(String name_of_folder) {
@@ -42,7 +42,7 @@ public class MyListsPageObject extends MainPageObject {
         );
     }
 
-    public void waitForArticleToDissapearByTitle(String article_title) {
+    public void waitForArticleToDisappearByTitle(String article_title) {
         String article_xpath = getSavedArticleXpathByTitle(article_title);
         this.waitForElementNotPresent(
                 By.xpath(article_xpath),
@@ -58,6 +58,16 @@ public class MyListsPageObject extends MainPageObject {
                 By.xpath(article_xpath),
                 "Cannot find saved article"
         );
-        this.waitForArticleToDissapearByTitle(article_title);
+        this.waitForArticleToDisappearByTitle(article_title);
+    }
+
+    public void clickByArticleWithTitle(String substring) {
+        String search_result_xpath = getSavedArticleXpathByTitle(substring);
+
+        this.waitForElementAndClick(
+                By.xpath(search_result_xpath),
+                "Cannot find and click article with title " + substring,
+                15
+        );
     }
 }
