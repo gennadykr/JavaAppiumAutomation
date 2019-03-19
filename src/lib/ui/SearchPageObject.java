@@ -56,6 +56,15 @@ public class SearchPageObject extends MainPageObject {
         );
     }
 
+    public String getTextOfSearchLine(){
+        return this.waitForElementAndGetAttribute(
+                By.id(SEARCH_INPUT2),
+                "text",
+                "Cannot find the search field",
+                5
+        );
+    }
+
     public void clickCancelSearch(){
         this.waitForElementAndClick(
                 By.id(SEARCH_CANCEL_BUTTON),

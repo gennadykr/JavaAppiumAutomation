@@ -4,6 +4,8 @@ import lib.CoreTestCase;
 import lib.ui.SearchPageObject;
 import org.junit.Test;
 
+import java.util.List;
+
 public class SearchTests extends CoreTestCase {
 
     @Test
@@ -60,4 +62,52 @@ public class SearchTests extends CoreTestCase {
         SearchPageObject.assertThereIsNoResultsOfSearch();
     }
 
+
+    @Test
+    public void testCheckSearchAndDiscard() {
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine("Java");
+        int amountOfFoundArticles = SearchPageObject.getAmountOfFoundArticles();
+        System.out.println(amountOfFoundArticles);
+        assertTrue(
+                "Cannot find few articles for the search",
+                amountOfFoundArticles > 2 // 3 is already "few"
+        );
+        SearchPageObject.clickCancelSearch();
+        SearchPageObject.assertThereIsNoResultsOfSearch();
+    }
+
+    @Test
+    public void testCheckFoundContent() {
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine("Java");
+
+        List<String> titles = SearchPageObject.getTitlesOfFoundArticles();
+
+        long numberOfArticlesFound = titles.stream().peek(
+                (e) -> {
+                    System.out.println(e);
+                    assertTrue(
+                            "Article's title doesn't contain Java (case-insensitive)",
+                            e.toLowerCase().contains("java")
+                    );
+                }
+        ).count();
+        System.out.println(numberOfArticlesFound);
+    }
+
+    @Test
+    public void testCheckTextInSearchField() {
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject.initSearchInput();
+        assertEquals(
+                "We don't see Search…",
+                "Search…",
+                SearchPageObject.getTextOfSearchLine()
+        );
+    }
 }
