@@ -19,7 +19,14 @@ public class SearchPageObject extends MainPageObject {
                     "//*[@resource-id='org.wikipedia:id/search_results_list']" +
                     "/*[@resource-id='org.wikipedia:id/page_list_item_container']",
             SEARCH_EMPTY_RESULTS_ELEMENT = "//*[@text='No results found']",
-            SEARCH_ARTICLE_TITLE = "org.wikipedia:id/page_list_item_title";
+            SEARCH_ARTICLE_TITLE = "org.wikipedia:id/page_list_item_title",
+            SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL =
+                    "//*[@resource-id='org.wikipedia:id/page_list_item_container']/*[@class='android.widget.LinearLayout']" +
+                            "[" +
+                            "*[@resource-id='org.wikipedia:id/page_list_item_title' and @text='{ARTICLE_TITLE}'] " +
+                            "and " +
+                            "*[@resource-id='org.wikipedia:id/page_list_item_description' and @text='{ARTICLE_DESCRIPTION}']" +
+                            "]";
 
 
     public SearchPageObject(AppiumDriver driver) {
@@ -30,7 +37,22 @@ public class SearchPageObject extends MainPageObject {
     private static String getResultSearchElement(String substring) {
         return SEARCH_RESULT_BY_SUBSTRING_TPL.replace("{SUBSTRING}", substring);
     }
+
+    private static String getXpathForArticleWith(String article_title, String article_description) {
+        return SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL
+                .replace("{ARTICLE_TITLE}", article_title)
+                .replace("{ARTICLE_DESCRIPTION}",article_description);
+    }
     /*TEMPLATE METHODS*/
+
+    public void waitForElementByTitleAndDescription(String title, String description) {
+        String search_result_xpath = getXpathForArticleWith(title,description);
+        this.waitForElementPresent(
+                By.xpath(search_result_xpath),
+                "Cannot find search result with title '" + title + "' and description '" + description + "'",
+                15
+        );
+    }
 
     public void initSearchInput() {
         this.waitForElementAndClick(

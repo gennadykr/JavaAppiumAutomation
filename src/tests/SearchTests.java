@@ -4,7 +4,9 @@ import lib.CoreTestCase;
 import lib.ui.SearchPageObject;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SearchTests extends CoreTestCase {
 
@@ -109,5 +111,19 @@ public class SearchTests extends CoreTestCase {
                 "Search…",
                 SearchPageObject.getTextOfSearchLine()
         );
+    }
+
+    @Test
+    public void testFirstThreeResultsPast(){
+        Map<String, String> expected_articles = new HashMap();
+        expected_articles.put("Java", "Island of Indonesia");
+        expected_articles.put("JavaScript", "Programming language");
+        expected_articles.put("Java (programming language)", "Object-oriented programming language");
+
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine("Java");
+
+        expected_articles.forEach((key, value) -> SearchPageObject.waitForElementByTitleAndDescription(key, value));
     }
 }
